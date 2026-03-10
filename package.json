@@ -2,7 +2,7 @@
   "name": "findem",
   "version": "1.0.0",
   "description": "",
-  "main": "server.ts",
+  "main": "dist/server.js",
   "scripts": {
     "dev": "nodemon --exec ts-node server.ts",
     "build": "tsc",

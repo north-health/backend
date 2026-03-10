@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import { db } from "../config/firebase/firebase";
 import { User } from "../models/user";
 
-// Extend Express Request to include `user`
+// EXTEND EXPRESS REQUEST TO INCLUDE USER
 declare global {
   namespace Express {
     interface Request {
@@ -11,8 +11,9 @@ declare global {
     }
   }
 }
+// ENDS
 
-// ================= Verify JWT =================
+// VERIFY JWT
 export const verifyJWT = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = req.headers.authorization?.split(" ")[1];
@@ -21,11 +22,11 @@ export const verifyJWT = async (req: Request, res: Response, next: NextFunction)
       return res.status(401).json({ message: "No token provided" });
     }
 
-    // Decode JWT
+    // DECODE JWT
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as any;
     const uid = decoded.uid;
 
-    // Fetch full user from Firestore
+    // FETCH USER FROM FIRESTORE
     const userDoc = await db.collection("users").doc(uid).get();
 
     if (!userDoc.exists) {
@@ -43,6 +44,7 @@ export const verifyJWT = async (req: Request, res: Response, next: NextFunction)
       return res.status(403).json({ message: "Account is deleted" });
     }
 
+    // ATTACH USER TO REQUEST
     req.user = {
       ...userData,
       id: userData.id || undefined,
@@ -67,8 +69,9 @@ export const verifyJWT = async (req: Request, res: Response, next: NextFunction)
     return res.status(401).json({ message: "Invalid or expired token" });
   }
 };
+// ENDS
 
-// ================= Role-based authorization =================
+// ROLE-BASED AUTHORIZATION
 export const authorizeRole = (...roles: ("user" | "admin")[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     if (!req.user) {
@@ -82,3 +85,4 @@ export const authorizeRole = (...roles: ("user" | "admin")[]) => {
     next();
   };
 };
+// ENDS

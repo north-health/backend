@@ -7,7 +7,7 @@ export class UserController {
   // UPDATE USER PROFILE
   static async updateProfile(req: Request, res: Response) {
     try {
-      const uid = req.user?.id?.toString() || req.body.uid; // From auth middleware or body
+      const uid = req.user?.id?.toString() || req.body.uid; 
       const { displayName, phoneNumber, province, city, identityNumber } = req.body;
 
       if (!uid) {

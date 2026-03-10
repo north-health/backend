@@ -6,7 +6,7 @@ import { User } from "../../models/user";
 
 export class UserController {
 
-  // ================= Email Login =================
+  // EMAIL & PASSWORD LOGIN
   static async loginEmail(req: Request, res: Response) {
     try {
       const { email, password } = req.body;
@@ -15,7 +15,7 @@ export class UserController {
         return res.status(400).json({ message: "Email and password are required" });
       }
 
-      // 1️⃣ Get user by email from Firebase Auth
+      // 1️⃣ GET USER FROM FIREBASE AUTH BY EMAIL
       let firebaseUser;
       try {
         firebaseUser = await auth.getUserByEmail(email);
@@ -23,7 +23,7 @@ export class UserController {
         return res.status(404).json({ message: "User not found" });
       }
 
-      // 2️⃣ Get user document from Firestore
+      // 2️⃣ GET USER DOCUMENT FROM FIRESTORE
       const userDoc = await db.collection("users").doc(firebaseUser.uid).get();
       if (!userDoc.exists) {
         return res.status(404).json({ message: "User data not found in Firestore" });
@@ -64,8 +64,9 @@ export class UserController {
       return res.status(500).json({ message: "Internal server error" });
     }
   }
+  // ENDS
 
-  // ================= Google Login =================
+  // GOOGLE LOGIN
   static async loginGoogle(req: Request, res: Response) {
     try {
       const { idToken } = req.body;
@@ -74,13 +75,13 @@ export class UserController {
         return res.status(400).json({ message: "Google ID token is required" });
       }
 
-      // Verify token with Firebase
+      // VERIFY ID TOKEN WITH FIREBASE AUTH
       const decodedToken = await auth.verifyIdToken(idToken);
       const uid = decodedToken.uid;
       const email = decodedToken.email || "";
       const displayName = decodedToken.name || "No Name";
 
-      // Check if user exists in Firestore
+      // CHECK IF USER EXISTS IN FIRESTORE
       const userDoc = await db.collection("users").doc(uid).get();
 
       if (userDoc.exists) {
@@ -105,7 +106,7 @@ export class UserController {
         });
       }
 
-      // Optional: Auto-register new Google user if not exists
+      // AUTO-REGISTER NEW GOOGLE USER
       const newUser: User = {
         id: undefined,
         email,
@@ -116,7 +117,7 @@ export class UserController {
         city: "",
         role: "user",
         DTO: {
-          isVerfied: true, // Google accounts are pre-verified
+          isVerfied: true,
           isBlocked: false,
           isActive: true,
           isDeleted: false,
