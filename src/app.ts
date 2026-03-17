@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import userRoutes from './routes/user';
+import careerRoutes from './routes/career';
 
 const app = express()
 
@@ -10,11 +11,11 @@ app.use(express.json())
 
 // ROUTES
 app.use('/api/user', userRoutes);
+app.use('/api', careerRoutes);
 
 // HEALTH CHECK
 app.get("/", (req, res) => {
   res.send("API running")
 })
-
 
 export default app
