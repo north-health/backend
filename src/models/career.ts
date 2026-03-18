@@ -1,8 +1,8 @@
 // CAREER
 
 export interface Career {
-  id?: number;
-  uid: number;
+  id?: string;
+  uid: string;
   path: string;
   createdAt?: Date;
   updatedAt?: Date;
@@ -12,7 +12,7 @@ export interface Career {
 
 // INSIGHT
 export interface RoadmapInsight {
-  id: number;
+  id: string;
   title: string;
   description: string;
   createdAt: Date;
@@ -27,9 +27,9 @@ export interface RoadmapInsight {
 
 // COMPLETED INSIGHTS
 export interface Roadmap {
-  id?: number;
-  uid: number;         
-  careerId: number;
+  id?: string;
+  uid: string;         
+  careerId: string;
   insights: RoadmapInsight[]; 
   timestamp: Date;
   totalRoads: number;
@@ -39,8 +39,8 @@ export interface Roadmap {
 
 // LEADERBOARD
 export interface LeaderboardEntry {
-  id: number;
-  uid: number;
+  id: string;
+  uid: string;
   career: Career;
   displayName: string;
   points: number;

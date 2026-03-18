@@ -3,8 +3,8 @@ import { body } from "express-validator";
 // CAREER VALIDATOR
 export const validateCareer = [
   body("uid")
-    .isNumeric()
-    .withMessage("User ID must be a number"),
+    .isString()
+    .withMessage("User ID must be a string"),
   body("path")
     .trim()
     .isLength({ min: 2, max: 200 })
