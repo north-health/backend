@@ -8,18 +8,15 @@ function initializeFirebase() {
     return admin.app();
   }
 
-  const serviceAccountEnv = process.env.FIREBASE_SERVICE_ACCOUNT;
+  const serviceAccountBase64 = process.env.FIREBASE_SERVICE_ACCOUNT_BASE64;
   
-  if (!serviceAccountEnv) {
-    throw new Error("FIREBASE_SERVICE_ACCOUNT environment variable is not set");
+  if (!serviceAccountBase64) {
+    throw new Error("FIREBASE_SERVICE_ACCOUNT_BASE64 environment variable is not set");
   }
 
-  const serviceAccount = JSON.parse(serviceAccountEnv);
-  
-  if (serviceAccount.privateKey) {
-   
-    serviceAccount.privateKey = serviceAccount.privateKey.replace(/\\n/g, "\n");
-  }
+  // Decode base64 to JSON string, then parse
+  const serviceAccountJson = Buffer.from(serviceAccountBase64, 'base64').toString('utf8');
+  const serviceAccount = JSON.parse(serviceAccountJson);
 
   return admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
@@ -33,6 +30,5 @@ const app = initializeFirebase();
 // EXPORTS
 export const db = admin.firestore();
 export const auth = admin.auth();
-// export const storage = admin.storage().bucket();
 
 export default admin;
