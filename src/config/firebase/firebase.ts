@@ -1,6 +1,5 @@
 import admin from "firebase-admin";
 import dotenv from "dotenv";
-import serviceAccountJson from "./serviceAccount.json";
 
 dotenv.config();
 
@@ -9,11 +8,16 @@ function initializeFirebase() {
     return admin.app();
   }
 
-  // Option 1: Use imported JSON directly (no parsing needed)
-  const serviceAccount = serviceAccountJson as admin.ServiceAccount;
+  const serviceAccountEnv = process.env.FIREBASE_SERVICE_ACCOUNT;
+  
+  if (!serviceAccountEnv) {
+    throw new Error("FIREBASE_SERVICE_ACCOUNT environment variable is not set");
+  }
 
-  // FIX PRIVATE KEY FORMAT (if loading from env var as string)
+  const serviceAccount = JSON.parse(serviceAccountEnv);
+  
   if (serviceAccount.privateKey) {
+   
     serviceAccount.privateKey = serviceAccount.privateKey.replace(/\\n/g, "\n");
   }
 
