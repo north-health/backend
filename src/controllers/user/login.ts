@@ -36,9 +36,9 @@ export class UserController {
         return res.status(403).json({ message: "Account is blocked" });
       }
 
-      if (!userData.DTO.isVerfied) {
-        return res.status(403).json({ message: "Account not verified" });
-      }
+      // if (!userData.DTO.isVerfied) {
+      //   return res.status(403).json({ message: "Account not verified" });
+      // }
 
       // 4️⃣ COMPARE PASSWORD
       const isMatch = await bcrypt.compare(password, userData.password || "");
@@ -57,6 +57,7 @@ export class UserController {
         message: "Login successful",
         token,
         user: userData,
+        uid: firebaseUser.uid
       });
 
     } catch (error) {
@@ -103,6 +104,7 @@ export class UserController {
           message: "Google login successful",
           token,
           user: userData,
+          uid
         });
       }
 
@@ -140,6 +142,7 @@ export class UserController {
         message: "Google user auto-registered and logged in",
         token,
         user: newUser,
+        uid
       });
 
     } catch (error) {

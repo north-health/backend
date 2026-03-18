@@ -86,6 +86,7 @@ export const registerEmail = async (req: Request, res: Response) => {
       message: "User registered successfully",
       token,
       user: userData,
+      uid: firebaseUser.uid,
     });
   } catch (error) {
     console.error("❌ Register email error:", error);
@@ -157,6 +158,7 @@ export const registerGoogle = async (req: Request, res: Response) => {
       message: "User registered successfully with Google",
       token,
       user: userData,
+      uid
     });
   } catch (error) {
     console.error("❌ Register Google error:", error);

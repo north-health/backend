@@ -7,15 +7,22 @@ export class UserController {
   // UPDATE USER PROFILE
   static async updateProfile(req: Request, res: Response) {
     try {
-      const uid = req.user?.id?.toString() || req.body.uid; 
-      const { displayName, phoneNumber, province, city, identityNumber } = req.body;
+      const uid = (req.user?.id ?? req.body.uid)?.toString();
+      if (!uid) {
+        return res.status(400).json({ message: "User ID is required" });
+      }
+      const { displayName, phoneNumber, province, city, identityNumber } =
+        req.body;
 
       if (!uid) {
         return res.status(400).json({ message: "User ID is required" });
       }
 
       // GET USER DOCUMENT
-      const userDoc = await db.collection("users").doc(uid).get();
+      const userDoc = await db
+        .collection("users")
+        .doc(uid as any)
+        .get();
       if (!userDoc.exists) {
         return res.status(404).json({ message: "User not found" });
       }
@@ -24,7 +31,9 @@ export class UserController {
 
       // VALIDATION
       if (identityNumber && !/^\d{13}$/.test(identityNumber)) {
-        return res.status(400).json({ message: "Identity number must be 13 digits" });
+        return res
+          .status(400)
+          .json({ message: "Identity number must be 13 digits" });
       }
 
       // PREPARE UPDATE DATA
@@ -36,10 +45,14 @@ export class UserController {
       if (phoneNumber !== undefined) updateData.phoneNumber = phoneNumber;
       if (province !== undefined) updateData.province = province;
       if (city !== undefined) updateData.city = city;
-      if (identityNumber !== undefined) updateData.identityNumber = identityNumber;
+      if (identityNumber !== undefined)
+        updateData.identityNumber = identityNumber;
 
       // UPDATE USER
-      await db.collection("users").doc(uid).update(updateData);
+      await db
+        .collection("users")
+        .doc(uid as any)
+        .update(updateData);
 
       return res.status(200).json({
         message: "Profile updated successfully",
@@ -70,9 +83,14 @@ export class UserController {
       const userData = userDoc.data() as User;
 
       // VERIFY CURRENT PASSWORD
-      const isMatch = await bcrypt.compare(currentPassword, userData.password || "");
+      const isMatch = await bcrypt.compare(
+        currentPassword,
+        userData.password || "",
+      );
       if (!isMatch) {
-        return res.status(401).json({ message: "Current password is incorrect" });
+        return res
+          .status(401)
+          .json({ message: "Current password is incorrect" });
       }
 
       // HASH NEW PASSWORD
