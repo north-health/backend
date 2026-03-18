@@ -1,6 +1,6 @@
 // USER ROUTES
 import { Router } from "express";
-import { UserController as RegisterController } from "../controllers/user/register";
+import { registerEmail, registerGoogle } from "../controllers/user/register";
 import { UserController as LoginController } from "../controllers/user/login";
 import { UserController as VerifyController } from "../controllers/user/verify";
 import { UserController as UpdateController } from "../controllers/user/update";
@@ -39,9 +39,9 @@ router.post(
   "/register/email",
   validateRegisterEmail,
   handleValidationErrors,
-  RegisterController.registerEmail
+  registerEmail as any
 );
-router.post("/register/google", RegisterController.registerGoogle);
+router.post("/register/google", registerGoogle as any);
 // ENDS
 
 // LOGIN ROUTES

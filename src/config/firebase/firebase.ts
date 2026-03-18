@@ -1,6 +1,6 @@
 import admin from "firebase-admin";
 import dotenv from "dotenv";
-// import serviceAccountJson from "./serviceAccount.json";
+import serviceAccountJson from "./serviceAccount.json";
 
 dotenv.config();
 
@@ -9,22 +9,17 @@ function initializeFirebase() {
     return admin.app();
   }
 
-  const accountJson = process.env.FIREBASE_SERVICE_ACCOUNT;
-  const serviceAccount = JSON.parse(accountJson as any) as admin.ServiceAccount;
+  // Option 1: Use imported JSON directly (no parsing needed)
+  const serviceAccount = serviceAccountJson as admin.ServiceAccount;
 
-  // FIX PRIVATE KEY FORMAT
+  // FIX PRIVATE KEY FORMAT (if loading from env var as string)
   if (serviceAccount.privateKey) {
     serviceAccount.privateKey = serviceAccount.privateKey.replace(/\\n/g, "\n");
   }
 
-  //   const bucketName = process.env.FIREBASE_STORAGE_BUCKET;
-  //   if (!bucketName) {
-  //     throw new Error("FIREBASE_STORAGE_BUCKET environment variable is not set");
-  //   }
-
   return admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    // storageBucket: bucketName,
+    // storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
   });
 }
 
