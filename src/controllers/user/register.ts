@@ -19,10 +19,10 @@ function createDefaultDTO() {
 // ==============================
 export const registerEmail = async (req: Request, res: Response) => {
   try {
-    const { email, password, displayName, identityNumber } = req.body;
+    const { email, password, displayName, identityNumber, role  } = req.body;
 
     // 1️⃣ VALIDATION
-    if (!email || !password || !displayName || !identityNumber) {
+    if (!email || !password || !displayName || !identityNumber || !role) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
@@ -56,13 +56,13 @@ export const registerEmail = async (req: Request, res: Response) => {
     // 5️⃣ CREATE USER DOCUMENT IN FIRESTORE
     const userData: User = {
       email,
-      password: hashedPassword, // WILL COME BACK TO REVIEW THIS DECISION
+      password: hashedPassword, // I WILL COME BACK TO REVIEW THIS DECISION
       displayName,
       identityNumber,
       phoneNumber: "",
       province: "",
       city: "",
-      role: "user",
+      role: role || "user", // I WILL COME BACK TO REVIEW THIS DECISION
       DTO: createDefaultDTO(),
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -79,7 +79,7 @@ export const registerEmail = async (req: Request, res: Response) => {
     const token = jwt.sign(
       { uid: firebaseUser.uid, email: userData.email },
       process.env.JWT_SECRET,
-      { expiresIn: "7d" }
+      { expiresIn: "1m" }
     );
 
     return res.status(201).json({

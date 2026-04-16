@@ -39,9 +39,18 @@ export interface Roadmap {
 
 // LEADERBOARD
 export interface LeaderboardEntry {
-  id: string;
   uid: string;
   career: Career;
   displayName: string;
   points: number;
 }
+// ENDS
+
+// CAREER CATEGORIES
+export interface CareerCategory {
+  name: string;
+  description: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+// ENDS

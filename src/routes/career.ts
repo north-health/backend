@@ -1,6 +1,8 @@
-// USER ROUTES
+// CAREER ROUTES
 import { Router } from "express";
 import { CreateCareer } from "../controllers/career/career";
+import { GetCareerCategories } from "../controllers/career/fetchCareerCategories";
+import { CreateCareerCategory } from "../controllers/career/careerCategories";
 // ENDS
 
 // MIDDLEWARES
@@ -10,6 +12,7 @@ import { verifyJWT } from "../middlewares/authMiddleware";
 // VALIDATORS
 import { validateCareer } from "../validators/careerValidator";
 import { validationResult } from "express-validator";
+import { validateCareerCategory } from "../validators/careerCategoryValidator";
 // ENDS
 
 // MIDDLEWARE TO HANDLE VALIDATION ERRORS
@@ -23,16 +26,28 @@ const handleValidationErrors = (req: any, res: any, next: any) => {
 
 const router = Router();
 
-
-
 // UPDATE ROUTES (REQUIRES AUTH)
 router.post(
   "/career",
   verifyJWT,
   validateCareer,
   handleValidationErrors,
-  CreateCareer as any
+  CreateCareer as any,
 );
+// ENDS
 
+// GET CAREER CATEGORIES (NO AUTH REQUIRED)
+router.get("/career/categories", GetCareerCategories as any);
+// ENDS
+
+// CREATE CAREER CATEGORY (REQUIRES ADMIN AUTH)
+router.post(
+  "/career/category",
+  verifyJWT,               
+  validateCareerCategory,   
+  handleValidationErrors,
+  CreateCareerCategory as any
+);
+// ENDS
 
 export default router;

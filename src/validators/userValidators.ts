@@ -16,6 +16,10 @@ export const validateRegisterEmail = [
   body("identityNumber")
     .matches(/^\d{13}$/)
     .withMessage("Identity number must be exactly 13 digits"),
+  body("role")
+    .optional()
+    .isIn(["user", "admin"])
+    .withMessage("Role must be either 'user' or 'admin'"),
 ];
 
 // LOGIN EMAIL VALIDATOR

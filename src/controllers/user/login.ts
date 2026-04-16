@@ -50,7 +50,7 @@ export class UserController {
       const token = jwt.sign(
         { uid: firebaseUser.uid, email: userData.email },
         process.env.JWT_SECRET as string,
-        { expiresIn: "7d" }
+        { expiresIn: "1m" }
       );
 
       return res.status(200).json({
