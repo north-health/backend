@@ -11,7 +11,7 @@ app.use(express.json())
 
 // ROUTES
 app.use('/api/user', userRoutes);
-app.use('/api', careerRoutes);
+app.use('/api/career', careerRoutes);
 
 // HEALTH CHECK
 app.get("/", (req, res) => {

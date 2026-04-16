@@ -28,7 +28,7 @@ const router = Router();
 
 // UPDATE ROUTES (REQUIRES AUTH)
 router.post(
-  "/career",
+  "/",
   verifyJWT,
   validateCareer,
   handleValidationErrors,
@@ -37,12 +37,12 @@ router.post(
 // ENDS
 
 // GET CAREER CATEGORIES (NO AUTH REQUIRED)
-router.get("/career/categories", GetCareerCategories as any);
+router.get("/categories", GetCareerCategories as any);
 // ENDS
 
 // CREATE CAREER CATEGORY (REQUIRES ADMIN AUTH)
 router.post(
-  "/career/category",
+  "/category",
   verifyJWT,               
   validateCareerCategory,   
   handleValidationErrors,
