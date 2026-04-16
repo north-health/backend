@@ -79,7 +79,7 @@ export const registerEmail = async (req: Request, res: Response) => {
     const token = jwt.sign(
       { uid: firebaseUser.uid, email: userData.email },
       process.env.JWT_SECRET,
-      { expiresIn: "1m" }
+      { expiresIn: "7d" }
     );
 
     return res.status(201).json({
