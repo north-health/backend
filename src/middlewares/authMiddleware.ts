@@ -47,7 +47,7 @@ export const verifyJWT = async (req: Request, res: Response, next: NextFunction)
     // ATTACH USER TO REQUEST
     req.user = {
       ...userData,
-      id: userData.id || undefined,
+      id: uid,
       email: userData.email,
       displayName: userData.displayName || undefined,
       identityNumber: userData.identityNumber,

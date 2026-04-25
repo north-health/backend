@@ -5,6 +5,7 @@ import { UserController as LoginController } from "../controllers/user/login";
 import { UserController as VerifyController } from "../controllers/user/verify";
 import { UserController as UpdateController } from "../controllers/user/update";
 import { UserController as DeleteController } from "../controllers/user/delete";
+import { UserController as GetController } from "../controllers/user/get";
 // ENDS
 
 // MIDDLEWARES
@@ -57,6 +58,10 @@ router.post("/login/google", LoginController.loginGoogle);
 
 // PROTECTED ROUTES 
 
+// GET ROUTES (REQUIRES AUTH)
+router.get("/", verifyJWT, authorizeRole("admin"), GetController.getUsers);
+// ENDS
+
 // VERIFY ROUTES (REQUIRES AUTH)
 router.post("/verify", verifyJWT, VerifyController.verifyEmail);
 // ENDS
@@ -92,5 +97,8 @@ router.post("/unblock", verifyJWT, authorizeRole("admin"), VerifyController.unbl
 router.delete("/hard-delete", verifyJWT, authorizeRole("admin"), DeleteController.hardDeleteUser);
 // ENDS
 // ENDS
+
+// KEEP DYNAMIC ROUTES LAST TO AVOID MASKING STATIC PATHS
+router.get("/:uid", verifyJWT, GetController.getUserById);
 
 export default router;
