@@ -59,7 +59,7 @@ router.post("/login/google", LoginController.loginGoogle);
 // PROTECTED ROUTES 
 
 // GET ROUTES (REQUIRES AUTH)
-router.get("/", verifyJWT, authorizeRole("admin"), GetController.getUsers);
+router.get("/list-users", verifyJWT, authorizeRole("admin"), GetController.getUsers);
 // ENDS
 
 // VERIFY ROUTES (REQUIRES AUTH)
