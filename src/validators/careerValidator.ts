@@ -9,4 +9,9 @@ export const validateCareer = [
     .trim()
     .isLength({ min: 2, max: 200 })
     .withMessage("Career path must be between 2 and 200 characters"),
+  body("categoryId")
+    .optional()
+    .trim()
+    .isLength({ min: 1, max: 128 })
+    .withMessage("categoryId must be a non-empty string when provided"),
 ];

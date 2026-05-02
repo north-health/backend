@@ -4,6 +4,8 @@ export interface Career {
   id?: string;
   uid: string;
   path: string;
+  /** Firestore `career_categories` document id when learner picked from CMS categories. */
+  categoryId?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
