@@ -18,6 +18,7 @@ export interface LearningModule {
   week: string;
   title: string;
   subtitle: string;
+  /** Empty string = self-paced (no instructor due date). */
   dueDate: string;
   difficulty: string;
   gradient: [string, string];

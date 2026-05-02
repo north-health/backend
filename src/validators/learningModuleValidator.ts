@@ -52,9 +52,10 @@ export const validateCreateLearningModule = [
     .isLength({ min: 1, max: 500 })
     .withMessage("subtitle is required"),
   body("dueDate")
+    .optional()
     .trim()
-    .isLength({ min: 1, max: 64 })
-    .withMessage("dueDate is required"),
+    .isLength({ max: 64 })
+    .withMessage("dueDate must be at most 64 characters"),
   body("difficulty")
     .trim()
     .isLength({ min: 1, max: 64 })
@@ -92,7 +93,7 @@ export const validateUpdateLearningModule = [
   body("week").optional().trim().isLength({ min: 1, max: 32 }),
   body("title").optional().trim().isLength({ min: 1, max: 300 }),
   body("subtitle").optional().trim().isLength({ min: 1, max: 500 }),
-  body("dueDate").optional().trim().isLength({ min: 1, max: 64 }),
+  body("dueDate").optional().trim().isLength({ max: 64 }),
   body("difficulty").optional().trim().isLength({ min: 1, max: 64 }),
   body("gradient")
     .optional()
