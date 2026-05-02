@@ -19,17 +19,23 @@ function createDefaultDTO() {
 // ==============================
 export const registerEmail = async (req: Request, res: Response) => {
   try {
-    const { email, password, displayName, identityNumber, role  } = req.body;
+    const { email, password, displayName, identityNumber } = req.body;
 
-    // 1️⃣ VALIDATION
-    if (!email || !password || !displayName || !identityNumber || !role) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
-
-    if (!/^\d{13}$/.test(identityNumber)) {
+    if (!email || !password || !displayName) {
       return res
         .status(400)
-        .json({ message: "Identity number must be 13 digits" });
+        .json({ message: "Email, password, and display name are required" });
+    }
+
+    const rawId =
+      identityNumber != null ? String(identityNumber).trim() : "";
+    const resolvedIdentity =
+      rawId.length > 0 ? rawId : "0000000000000";
+
+    if (!/^\d{13}$/.test(resolvedIdentity)) {
+      return res
+        .status(400)
+        .json({ message: "Identity number must be 13 digits when provided" });
     }
 
     // 2️⃣ CHECK IF USER EXISTS
@@ -58,11 +64,11 @@ export const registerEmail = async (req: Request, res: Response) => {
       email,
       password: hashedPassword, // I WILL COME BACK TO REVIEW THIS DECISION
       displayName,
-      identityNumber,
+      identityNumber: resolvedIdentity,
       phoneNumber: "",
       province: "",
       city: "",
-      role: role || "user", // I WILL COME BACK TO REVIEW THIS DECISION
+      role: "user",
       DTO: createDefaultDTO(),
       createdAt: new Date(),
       updatedAt: new Date(),

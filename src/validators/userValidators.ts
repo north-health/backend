@@ -14,12 +14,9 @@ export const validateRegisterEmail = [
     .isLength({ min: 2, max: 50 })
     .withMessage("Display name must be between 2 and 50 characters"),
   body("identityNumber")
-    .matches(/^\d{13}$/)
-    .withMessage("Identity number must be exactly 13 digits"),
-  body("role")
     .optional()
-    .isIn(["user", "admin"])
-    .withMessage("Role must be either 'user' or 'admin'"),
+    .matches(/^\d{13}$/)
+    .withMessage("Identity number must be exactly 13 digits when provided"),
 ];
 
 // LOGIN EMAIL VALIDATOR
