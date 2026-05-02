@@ -2,6 +2,7 @@
 import { Router } from "express";
 import { registerEmail, registerGoogle } from "../controllers/user/register";
 import { UserController as LoginController } from "../controllers/user/login";
+import { refreshTokens } from "../controllers/user/refresh";
 import { UserController as VerifyController } from "../controllers/user/verify";
 import { UserController as UpdateController } from "../controllers/user/update";
 import { UserController as DeleteController } from "../controllers/user/delete";
@@ -53,6 +54,7 @@ router.post(
   LoginController.loginEmail
 );
 router.post("/login/google", LoginController.loginGoogle);
+router.post("/refresh", refreshTokens);
 // ENDS
 // ENDS
 

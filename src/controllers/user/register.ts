@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { auth, db } from "../../config/firebase/firebase";
 import { User } from "../../models/user";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+import { signAccessToken, signRefreshToken } from "../../utils/jwtPair";
 
 // INIT DTO VALUES
 function createDefaultDTO() {
@@ -77,20 +77,20 @@ export const registerEmail = async (req: Request, res: Response) => {
 
     await db.collection("users").doc(firebaseUser.uid).set(userData);
 
-    // 6️⃣ GENERATE JWT TOKEN
-    if (!process.env.JWT_SECRET) {
-      throw new Error("JWT_SECRET is not defined");
-    }
-
-    const token = jwt.sign(
-      { uid: firebaseUser.uid, email: userData.email },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
+    // 6️⃣ GENERATE TOKENS
+    const token = signAccessToken({
+      uid: firebaseUser.uid,
+      email: userData.email,
+    });
+    const refreshToken = signRefreshToken({
+      uid: firebaseUser.uid,
+      email: userData.email,
+    });
 
     return res.status(201).json({
       message: "User registered successfully",
       token,
+      refreshToken,
       user: userData,
       uid: firebaseUser.uid,
     });
@@ -149,20 +149,14 @@ export const registerGoogle = async (req: Request, res: Response) => {
 
     await db.collection("users").doc(uid).set(userData);
 
-    // GENERATE JWT
-    if (!process.env.JWT_SECRET) {
-      throw new Error("JWT_SECRET is not defined");
-    }
-
-    const token = jwt.sign(
-      { uid, email: userData.email },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
+    // GENERATE TOKENS
+    const token = signAccessToken({ uid, email: userData.email });
+    const refreshToken = signRefreshToken({ uid, email: userData.email });
 
     return res.status(201).json({
       message: "User registered successfully with Google",
       token,
+      refreshToken,
       user: userData,
       uid
     });

@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import admin, { auth, db } from "../../config/firebase/firebase";
+import { auth, db } from "../../config/firebase/firebase";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import { User } from "../../models/user";
+import { signAccessToken, signRefreshToken } from "../../utils/jwtPair";
 
 export class UserController {
 
@@ -46,16 +46,19 @@ export class UserController {
         return res.status(401).json({ message: "Invalid password" });
       }
 
-      // 5️⃣ GENERATE JWT TOKEN
-      const token = jwt.sign(
-        { uid: firebaseUser.uid, email: userData.email },
-        process.env.JWT_SECRET as string,
-        { expiresIn: "7d" }
-      );
+      const token = signAccessToken({
+        uid: firebaseUser.uid,
+        email: userData.email,
+      });
+      const refreshToken = signRefreshToken({
+        uid: firebaseUser.uid,
+        email: userData.email,
+      });
 
       return res.status(200).json({
         message: "Login successful",
         token,
+        refreshToken,
         user: userData,
         uid: firebaseUser.uid
       });
@@ -93,16 +96,13 @@ export class UserController {
           return res.status(403).json({ message: "Account is blocked" });
         }
 
-        // GENERATE JWT TOKEN
-        const token = jwt.sign(
-          { uid, email: userData.email },
-          process.env.JWT_SECRET as string,
-          { expiresIn: "7d" }
-        );
+        const token = signAccessToken({ uid, email: userData.email });
+        const refreshToken = signRefreshToken({ uid, email: userData.email });
 
         return res.status(200).json({
           message: "Google login successful",
           token,
+          refreshToken,
           user: userData,
           uid
         });
@@ -131,16 +131,13 @@ export class UserController {
 
       await db.collection("users").doc(uid).set(newUser);
 
-      // GENERATE JWT TOKEN
-      const token = jwt.sign(
-        { uid, email: newUser.email },
-        process.env.JWT_SECRET as string,
-        { expiresIn: "7d" }
-      );
+      const token = signAccessToken({ uid, email: newUser.email });
+      const refreshToken = signRefreshToken({ uid, email: newUser.email });
 
       return res.status(201).json({
         message: "Google user auto-registered and logged in",
         token,
+        refreshToken,
         user: newUser,
         uid
       });
