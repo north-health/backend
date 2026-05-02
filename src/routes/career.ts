@@ -1,6 +1,7 @@
 // CAREER ROUTES
 import { Router } from "express";
 import { CreateCareer } from "../controllers/career/career";
+import { getMyCareer } from "../controllers/career/getMyCareer";
 import { GetCareerCategories } from "../controllers/career/fetchCareerCategories";
 import { CreateCareerCategory } from "../controllers/career/careerCategories";
 // ENDS
@@ -25,6 +26,9 @@ const handleValidationErrors = (req: any, res: any, next: any) => {
 };
 
 const router = Router();
+
+// Current user's career (mobile + web; requires auth)
+router.get("/me", verifyJWT, getMyCareer as any);
 
 // UPDATE ROUTES (REQUIRES AUTH)
 router.post(
